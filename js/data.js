@@ -82,6 +82,7 @@ var DATA = {
                 {	name:'furnace',	machine:'manual',	time:0.5,	output:1,	inputs:{ 'stone':5 }	},
                 {	name:'furnace-3',	reqs:{ 'material-2':1 },	machine:'assembler',	time:5,	output:1,	inputs:{ 'circuit-2':5, 'steel':10, 'brick':10 }	},
                 {	name:'lab',	reqs:{ 'assembler':1 },	machine:'manual',	time:2,	output:1,	inputs:{ 'circuit':10, 'gear':10, 'belt':4 }	},
+                {	name:'manual'	},
                 {	name:'miner',	reqs:{ 'assembler':1 },	machine:'manual',	time:5,	output:1,	inputs:{ 'iron-plate':6, 'gear':6, 'stone':10 }	},
                 {	name:'pump',	reqs:{ 'fluid-handling':1 },	machine:'manual',	time:0.5,	output:1,	inputs:{ 'pipe':1, 'gear':6, 'circuit':2 }	},
                 {	name:'pumpjack',	reqs:{ 'oil-tech':1 },	machine:'manual',	time:5,	output:1,	inputs:{ 'pipe':10, 'gear':10, 'steel':5, 'circuit':5 }	},
@@ -155,6 +156,7 @@ var DATA = {
                 
                 // Machines
                 //---
+                {	id:'manual',	cat:'machine',	recipeName:'manual',	count:1	},
                 {	id:'furnace',	cat:'machine',	recipeName:'furnace',	hasUnlocks:true	},
                 {	id:'assembler',	cat:'machine',	recipeName:'assembler',	hasUnlocks:true	},
                 {	id:'miner',	cat:'machine',	recipeName:'miner',	count:1	},

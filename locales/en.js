@@ -85,6 +85,7 @@ var en_translations = {
     'fto1-chemical-plant': 'Chemical plant',
     'fto1-furnace': 'Stone furnace',
     'fto1-lab': 'Lab',
+    'fto1-manual': 'Steel axe',
     'fto1-miner': 'Mining drill',
     'fto1-pump': 'Offshore pump',
     'fto1-pumpjack': 'Pumpjack',

@@ -47,7 +47,7 @@ class GameItem {
         this.stack = this.initData.stack ? this.initData.stack : Infinity
         this.count = this.initData.count ? this.initData.count : 0
         //---
-        this.status = 'stopped'
+        this.status = 'wait'
         this.collapsed = false
         //---
         this.recipe = game.currentScenario.recipes.find(recipe => recipe.name == this.recipeName)
@@ -56,7 +56,7 @@ class GameItem {
         this.output = this.recipe.output
         //---
         this.machine = this.recipe.machine
-        this.machineCount = this.machine == 'manual' ? 1 : 0
+        this.machineCount = 0
         this.selectMachineCount = '1'
         //---
         if (this.recipe.inputs) {
@@ -76,7 +76,8 @@ class GameItem {
         this.reqs = this.recipe.reqs ? this.recipe.reqs : null
         this.unlocked = this.reqs ? false : true
         //---
-        this.refreshTime()
+        this.time = this.recipe.time
+        this.remainingTime = this.time
         //this.refreshNeeds(game)
     }
     //---
@@ -131,10 +132,13 @@ class GameItem {
     //---
     refreshTime() {
         //---
+        let oldTime = this.time
+        //---
         this.time = this.recipe.time
         if (this.machineCount > 0) this.time /= this.machineCount
         //---
-        this.remainingTime = this.time        
+        let percent = this.time / oldTime
+        this.remainingTime *= percent
     }
     //---
     refreshNeeds(game) {
@@ -170,9 +174,6 @@ class GameItem {
             //---
             this.machineCount = 0
             this.refreshTime()
-            //---
-            this.status = 'stopped'
-            this.remainingTime = this.time
         }
         //---
         for (let id in this.inputs) {
@@ -325,7 +326,7 @@ class Game {
         let refresh = false
         let seconds = stepMs / 1000
         //---
-        let items = this.currentItems.filter(item => item.machineCount > 0 && item.status != 'stopped')
+        let items = this.currentItems.filter(item => item.machineCount > 0)
         items.forEach(item => {
             //---
             if (item.status == 'wait' && this.canProduce(item)) {
@@ -399,7 +400,8 @@ class Game {
                     //---
                     if (item.machine == 'manual') {
                         //---
-                        item.status = 'stopped'
+                        item.status = 'wait'
+                        item.machineCount = 0
                         item.remainingTime = item.time
                     }
                     //---
@@ -437,8 +439,6 @@ class Game {
     //---
     canAddMachineCount(item) {
         //---
-        if (item.status != 'stopped') return false
-        //---
         let addCount = item.getAddMachineCount(this)
         if (addCount <= 0) return false
         //---
@@ -460,8 +460,6 @@ class Game {
     //---
     canRemoveMachineCount(item) {
         //---
-        if (item.status != 'stopped') return false
-        //---
         let removeCount = item.getRemoveMachineCount()
         if (item.machineCount < 1 || item.machineCount < removeCount) return false
         //---
@@ -476,49 +474,8 @@ class Game {
             let removeCount = item.getRemoveMachineCount()
             item.machineCount -= removeCount
             item.refreshTime()
-        }
-    }
-    //---
-    canStartLine(item) {
-        //---
-        if (item.status != 'stopped') return false
-        if (item.machine != 'manual' && item.machineCount <= 0) return false
-        if (item.machine == 'manual') return this.canProduce(item)
-        //---
-        return true
-    }
-    //---
-    startLine(itemId) {
-        //---
-        let item = this.getItem(itemId)
-        if (this.canStartLine(item)) {
             //---
-            item.status = 'wait'
-        }
-    }
-    //---
-    canStopLine(item) {
-        //---
-        if (item.status == 'stopped') return false
-        //---
-        return true
-    }
-    //---
-    stopLine(itemId) {
-        //---
-        let item = this.getItem(itemId)
-        if (this.canStopLine(item)) {
-            //---
-            if (item.status == 'inprogress' && item.inputs) {
-                for (let id in item.inputs) {
-                    //---
-                    let inputElem = this.getItem(id)
-                    inputElem.count += item.inputs[id] * item.machineCount                        
-                }
-            }
-            //---
-            item.status = 'stopped'
-            item.remainingTime = item.time
+            if (item.machineCount <= 0) item.status = 'wait'
         }
     }
 }

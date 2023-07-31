@@ -1,1 +1,1 @@
-# fgfactory3
+# FG Factory 3 by Freddec

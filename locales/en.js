@@ -3,7 +3,7 @@ var en_translations = {
     /* GENERAL */
 
     //---
-    'game_title': 'FG Factory 5',
+    'game_title': 'FG Factory 3',
     //---
     'screenLoading_text': 'Initializing game...',
     //---

@@ -453,6 +453,30 @@ a:hover { color: var(--bs-link-hover-color); }
     rotate: 0deg;
     transition: rotate .3s;
 }
+
+#left-pane {
+    z-index: 1000; position: absolute; top: 0; bottom: 0; left: -100%;
+    width: 100%;
+    transition: left .5s ease;
+}
+
+@media (min-width: 992px) {
+    #left-pane { left: 0; width: 320px; }
+}
+
+#left-pane.open {
+    left: 0;
+}
+
+#right-pane {
+    position: absolute; top: 0; bottom: 0;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    #right-pane { padding-left: 320px; }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 @keyframes flicker {

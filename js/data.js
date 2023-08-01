@@ -76,8 +76,8 @@ var DATA = {
                 {	name:'yellow-pack',	reqs:{ 'yellow-tech':1 },	machine:'assembler',	time:21,	output:3,	inputs:{ 'robot':1, 'low-density-structure':3, 'circuit-3':2	}	},
                 //---
                 {	name:'assembler',	reqs:{ 'furnace':1 },	machine:'manual',	time:7,	output:1,	inputs:{ 'iron-plate':22, 'copper-plate':5 }	},
-                {	name:'assembler-2',	reqs:{ 'automation-2':1 },	machine:'manual',	time:0.5,	output:1,	inputs:{ 'gear':5, 'steel':2, 'circuit':3, 'assembler':1 }	},
-                {	name:'assembler-3',	reqs:{ 'automation-3':1 },	machine:'manual',	time:0.5,	output:1,	inputs:{ 'speed-module':4, 'assembler-2':2 }	},
+                {	name:'assembler-2',	reqs:{ 'automation-2':1 },	machine:'manual',	time:8,	output:1,	inputs:{ 'gear':5, 'steel':2, 'circuit':3, 'iron-plate':22, 'copper-plate':5 }	},
+                {	name:'assembler-3',	reqs:{ 'automation-3':1 },	machine:'manual',	time:12,	output:1,	inputs:{ 'speed-module':4, 'gear':10, 'steel':4, 'circuit':6, 'iron-plate':44, 'copper-plate':10 }	},
                 {	name:'chemical-plant',	reqs:{ 'oil-tech':1 },	machine:'manual',	time:5,	output:1,	inputs:{ 'pipe':5, 'gear':5, 'steel':5, 'circuit':5 }	},
                 {	name:'furnace',	machine:'manual',	time:0.5,	output:1,	inputs:{ 'stone':5 }	},
                 {	name:'furnace-3',	reqs:{ 'material-2':1 },	machine:'assembler',	time:5,	output:1,	inputs:{ 'circuit-2':5, 'steel':10, 'brick':10 }	},

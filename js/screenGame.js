@@ -363,9 +363,13 @@ class ScreenGame {
         //---
         else if (action == 'selectItem') {
             //---
+            let node = document.getElementById(this.selectedItemId + '-tab-pane')
+            node.classList.remove('active')
+            node.classList.remove('show')
+            //---
             this.selectedItemId = data.itemId
             //---
-            let triggerEl = document.querySelector('.nav.nav-pills button[data-bs-target="#' + data.itemId + '-tab-pane"]')
+            let triggerEl = document.querySelector('.nav.nav-pills button[data-bs-target="#' + this.selectedItemId + '-tab-pane"]')
             bootstrap.Tab.getInstance(triggerEl).show()
         }
         //---

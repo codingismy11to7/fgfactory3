@@ -474,8 +474,6 @@ class Game {
             let removeCount = item.getRemoveMachineCount()
             item.machineCount -= removeCount
             item.refreshTime()
-            //---
-            if (item.machineCount <= 0) item.status = 'wait'
         }
     }
 }

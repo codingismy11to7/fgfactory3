@@ -4,6 +4,7 @@ var en_translations = {
 
     //---
     'game_title': 'FG Factory 3',
+    'game_disclaimer': 'This is a prototype. Development is still in progress. Data loss and reset could happen.',
     //---
     'screenLoading_text': 'Initializing game...',
     //---

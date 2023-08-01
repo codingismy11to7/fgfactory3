@@ -10,8 +10,30 @@ var TplScreenGame = function(data) {
         html += '<div class="position-absolute" style="top:0; width:100%; height:48px;">'
             html += '<div class="h-100 container px-3 col-12 bg-light border-bottom border-dark d-flex align-items-center">'
                 html += '<div class="flex-fill row gx-2 align-items-center">'
-                    html += '<div class="col-auto"><img src="logo.png" width="24px" height="24px" class="rounded"></div>'
-                    html += '<div class="col"><span class="fs-6 text-white">' + i18next.t('game_title') + '</span></div>'
+                    html += '<div class="col">'
+                        html += '<div class="row gx-2 align-items-center">'
+                            html += '<div class="col-auto">'
+                                html += '<img src="logo.png" width="24px" height="24px" class="rounded">'
+                            html += '</div>'
+                            html += '<div class="col-auto">'
+                                html += '<span class="fs-6 text-white">' + i18next.t('game_title') + '</span>'
+                            html += '</div>'
+                        html += '</div>'
+                    html += '</div>'
+                    html += '<div class="col-auto">'
+                        html += '<div class="dropdown">'
+                            html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
+                                html += '<div class="badge text-bg-danger">'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.0.1'
+                                html += '</div>'
+                            html += '</button>'
+                            html += '<div class="dropdown-menu">'
+                                html += '<div class="px-2 py-1 text-center small">'
+                                    html += '<span class="text-danger">' + i18next.t('game_disclaimer') + '</span>'
+                                html += '</div>'
+                            html += '</div>'
+                        html += '</div>'
+                    html += '</div>'
                     html += '<div class="col-auto">'
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
@@ -221,8 +243,12 @@ var TplItem = function(scenario, item) {
                                     html += '<div class="col-auto">'
                                         html += '<small class="opacity-50">x</small> <span id="itemCount-' + item.id + '"></span>'
                                         if (item.stack != Infinity) html += ' <small>/' + formatNumber(item.stack) + '</small>'
-                                        if (item.cat == 'machine') html += ' <span id="itemAvailableCount-' + item.id + '"></span>'
                                     html += '</div>'
+                                    if (item.cat == 'machine') {
+                                        html += '<div class="col-auto">'
+                                            html += ' <span id="itemAvailableCount-' + item.id + '"></span>'
+                                        html += '</div>'
+                                    }
                                 html += '</div>'
                             html += '</div>'
                             html += '<div class="col-auto">'
@@ -251,7 +277,7 @@ var TplItem = function(scenario, item) {
                                             html += '<i class="fas fa-fw fa-plus-circle"></i>'
                                         html += '</button>'
                                     html += '</div>'
-                                    html += '<div class="col-auto text-center" style="width:65px;">'
+                                    html += '<div class="col-auto text-end" style="width:65px;">'
                                         html += '<small id="itemRemainingTime-' + item.id + '"></small>'
                                         html += '<div class="progress mt-1" style="height:3px;">'
                                             html += '<div id="itemProgress-' + item.id + '" class="progress-bar bg-success" style="width:0%;"></div>'
@@ -399,16 +425,11 @@ class ScreenGame {
         else if (action == 'addMachineCount') window.app.game.addMachineCount(data.itemId)
         else if (action == 'removeMachineCount') window.app.game.removeMachineCount(data.itemId)
         //---
-        else if (action == 'stopLine') window.app.game.stopLine(data.itemId)
-        else if (action == 'startLine') window.app.game.startLine(data.itemId)
-        //---
         else if (action == 'unassignAll') {
             //---
+            window.app.game.removeMachineCount(data.itemId)
+            //---
             let item = window.app.game.getItem(data.itemId)
-            if (item.machine != 'manual') {
-                //---
-                window.app.game.removeMachineCount(data.itemId)
-            }
             if (item.inputs) {
                 for (let id in item.inputs) {
                     this.doClick('unassignAll', { itemId:id })
@@ -418,11 +439,9 @@ class ScreenGame {
         //---
         else if (action == 'assignAll') {
             //---
+            window.app.game.addMachineCount(data.itemId)
+            //---
             let item = window.app.game.getItem(data.itemId)
-            if (item.machine != 'manual') {
-                //---
-                window.app.game.addMachineCount(data.itemId)
-            }
             if (item.inputs) {
                 for (let id in item.inputs) {
                     this.doClick('assignAll', { itemId:id })

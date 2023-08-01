@@ -401,7 +401,10 @@ class ScreenGame {
         //---
         else if (action == 'selectItem') {
             //---
-            let node = document.getElementById(this.selectedItemId + '-tab-pane')
+            let node = document.getElementById('left-pane')
+            node.classList.remove('open')
+            //---
+            node = document.getElementById(this.selectedItemId + '-tab-pane')
             node.classList.remove('active')
             node.classList.remove('show')
             //---

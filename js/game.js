@@ -46,7 +46,6 @@ class GameItem {
         //---
         this.stack = this.initData.stack ? this.initData.stack : Infinity
         this.count = this.initData.count ? this.initData.count : 0
-        this.totalCount = this.count
         //---
         this.status = 'wait'
         this.collapsed = false
@@ -66,7 +65,7 @@ class GameItem {
             //---
             for (let id in this.recipe.inputs) {
                 //---
-                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:(this.stack == Infinity ? 1 : this.stack) * this.recipe.inputs[id] })
+                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:Math.ceil((this.stack == Infinity ? 1 : this.stack) * this.recipe.inputs[id] / this.recipe.output) })
                 game.currentItems.push(item)
                 item.reset(game)
                 //---
@@ -86,7 +85,6 @@ class GameItem {
         if (data.count != null) this.count = data.count
         if (data.status != null) this.status = data.status
         if (data.collapsed != null) this.collapsed = data.collapsed
-        if (data.totalCount != null) this.totalCount = data.totalCount
         if (data.machineCount != null) this.machineCount = data.machineCount
         if (data.remainingTime != null) this.remainingTime = data.remainingTime
         if (data.selectMachineCount != null) this.selectMachineCount = data.selectMachineCount
@@ -103,7 +101,6 @@ class GameItem {
         savedData.count = this.count
         savedData.status = this.status
         savedData.collapsed = this.collapsed
-        savedData.totalCount = this.totalCount
         savedData.machineCount = this.machineCount
         savedData.remainingTime = this.remainingTime
         savedData.selectMachineCount = this.selectMachineCount
@@ -137,10 +134,14 @@ class GameItem {
         let oldTime = this.time
         //---
         this.time = this.recipe.time
-        if (this.machineCount > 0) this.time /= this.machineCount
-        //---
-        let percent = this.time / oldTime
-        this.remainingTime *= percent
+        if (this.machineCount > 0) {
+            //---
+            this.time /= this.machineCount
+            //---
+            let percent = this.time / oldTime
+            this.remainingTime *= percent
+        }
+        else this.remainingTime = this.time
     }
     //---
     refreshNeeds(game) {
@@ -176,14 +177,6 @@ class GameItem {
         this.machineCount = 0
         //---
         this.refreshTime()
-        //---
-        for (let id in this.inputs) {
-            //---
-            let child = game.getItem(id)
-            child.unassignAll(game)
-            //---
-            child.totalCount = 0
-        }
     }
 }
 //---
@@ -312,16 +305,27 @@ class Game {
     //---
     canProduce(item) {
         //---
-        if (item.stack != Infinity && item.count >= item.stack) {
-            //---
-            item.totalCount = item.count
-            return false
-        }
+        if (item.stack != Infinity && item.count >= item.stack) return false
         //---
         if (item.inputs) {
             for (let id in item.inputs) {
                 let inputItem = this.getItem(id)
-                if (inputItem.stack != Infinity && inputItem.totalCount < inputItem.stack)
+                if (inputItem.stack != Infinity && inputItem.count < inputItem.stack)
+                    return false
+            }
+        }
+        //---
+        return true
+    }
+    //---
+    canContinue(item) {
+        //---
+        if (item.stack != Infinity && item.count >= item.stack) return false
+        //---
+        if (item.inputs) {
+            for (let id in item.inputs) {
+                let inputItem = this.getItem(id)
+                if (inputItem.count < item.inputs[id])
                     return false
             }
         }
@@ -388,7 +392,6 @@ class Game {
                     }
                     //---
                     item.count += (estimatedCycleCount + 1) * item.output
-                    item.totalCount += (estimatedCycleCount + 1) * item.output
                     if (item.stack != Infinity && item.count > item.stack) item.count = item.stack
                     //---
                     if (item.stack == Infinity || (item.count >= item.stack)) item.unassignAll(this)
@@ -403,9 +406,9 @@ class Game {
                         //---
                         item.status = 'wait'
                         item.machineCount = 0
-                        item.remainingTime = item.time
+                        item.refreshTime()
                     }
-                    else if (this.canProduce(item)) {
+                    else if (this.canContinue(item)) {
                         //---
                         if (item.inputs) {
                             for (let id in item.inputs) {
@@ -421,7 +424,8 @@ class Game {
                     else {
                         //---
                         item.status = 'wait'
-                        item.remainingTime = item.time
+                        item.machineCount = 0
+                        item.refreshTime()
                     }
                 }
                 else item.remainingTime -= seconds

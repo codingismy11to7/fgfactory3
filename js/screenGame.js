@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.0.3'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.0.4'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -268,6 +268,7 @@ var TplItem = function(scenario, item) {
                                     html += '<div class="col-auto">'
                                         html += '<select class="form-control form-control-sm" onchange="window.app.doClick(\'setMachineSelectCount\', { itemId:\'' + item.id + '\', count:this.value })">'
                                             html += '<option' + (item.selectMachineCount == '1' ? ' selected' : '') + '  value="1">1</option>'
+                                            html += '<option' + (item.selectMachineCount == '5' ? ' selected' : '') + '  value="5">5</option>'
                                             html += '<option' + (item.selectMachineCount == '10' ? ' selected' : '') + '  value="10">10</option>'
                                             html += '<option' + (item.selectMachineCount == '100' ? ' selected' : '') + '  value="100">100</option>'
                                             html += '<option' + (item.selectMachineCount == 'max' ? ' selected' : '') + '  value="max">' + i18next.t('word-max') + '</option>'
@@ -440,6 +441,20 @@ class ScreenGame {
         else if (action == 'addMachineCount') window.app.game.addMachineCount(data.itemId)
         else if (action == 'removeMachineCount') window.app.game.removeMachineCount(data.itemId)
         //---
+        else if (action == 'setAllMachineSelectCount') {
+            //---
+            window.app.game.setMachineSelectCount(data)
+            //---
+            let item = window.app.game.getItem(data.itemId)
+            if (item.inputs) {
+                for (let id in item.inputs) {
+                    this.doClick('setAllMachineSelectCount', { itemId:id, count:data.count })
+                }
+            }
+            //---
+            this.displayFactoryTab()
+        }
+        //---
         else if (action == 'unassignAll') {
             //---
             window.app.game.removeMachineCount(data.itemId)
@@ -564,6 +579,15 @@ class ScreenGame {
                                         html += '</div>'
                                         html += '<div class="col text-truncate">'
                                             html += '<span class="fs-6 text-white">' + i18next.t(scenario.label + item.name) + '</span>'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<select class="form-control form-control-sm" onchange="window.app.doClick(\'setAllMachineSelectCount\', { itemId:\'' + item.id + '\', count:this.value })">'
+                                                html += '<option' + (item.selectMachineCount == '1' ? ' selected' : '') + '  value="1">1</option>'
+                                                html += '<option' + (item.selectMachineCount == '5' ? ' selected' : '') + '  value="5">5</option>'
+                                                html += '<option' + (item.selectMachineCount == '10' ? ' selected' : '') + '  value="10">10</option>'
+                                                html += '<option' + (item.selectMachineCount == '100' ? ' selected' : '') + '  value="100">100</option>'
+                                                html += '<option' + (item.selectMachineCount == 'max' ? ' selected' : '') + '  value="max">' + i18next.t('word-max') + '</option>'
+                                            html += '</select>'
                                         html += '</div>'
                                         html += '<div class="col-auto">'
                                             html += '<button type="button" class="btn btn-outline-danger" onclick="window.app.doClick(\'unassignAll\', { itemId:\'' + item.id + '\' })">'

@@ -111,6 +111,7 @@ class GameItem {
     getAddMachineCount(game) {
         //---
         if (this.selectMachineCount == '1') return 1
+        else if (this.selectMachineCount == '5') return 5
         else if (this.selectMachineCount == '10') return 10
         else if (this.selectMachineCount == '100') return 100
         else if (this.selectMachineCount == 'max') return game.getAvailableCount(this.machine)
@@ -119,6 +120,7 @@ class GameItem {
     getRemoveMachineCount() {
         //---
         if (this.selectMachineCount == '1') return 1
+        else if (this.selectMachineCount == '5') return 5
         else if (this.selectMachineCount == '10') return 10
         else if (this.selectMachineCount == '100') return 100
         else if (this.selectMachineCount == 'max') return this.machineCount

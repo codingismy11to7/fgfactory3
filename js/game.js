@@ -44,7 +44,14 @@ class GameItem {
     //---
     reset(game) {
         //---
-        this.stack = this.initData.stack ? this.initData.stack : Infinity
+        this.recipe = game.currentScenario.recipes.find(recipe => recipe.name == this.recipeName)
+        //---
+        this.stack = this.initData.stack ? Math.ceil(this.initData.stack) : Infinity
+        if (this.stack != Infinity && this.recipe.output != 1) {
+            let ret = this.stack % this.recipe.output
+            if (ret != 0) this.stack = (Math.floor(this.stack / this.recipe.output) + 1) * this.recipe.output
+        }
+        //---
         this.count = this.initData.count ? this.initData.count : 0
         this.toComplete = this.initData.toComplete ? this.initData.toComplete : false
         //---
@@ -52,8 +59,6 @@ class GameItem {
         //---
         this.status = 'wait'
         this.collapsed = false
-        //---
-        this.recipe = game.currentScenario.recipes.find(recipe => recipe.name == this.recipeName)
         //---
         this.name = this.recipe.name
         this.output = this.recipe.output
@@ -68,7 +73,7 @@ class GameItem {
             //---
             for (let id in this.recipe.inputs) {
                 //---
-                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:Math.ceil((this.stack == Infinity ? 1 : this.stack) * this.recipe.inputs[id] / this.recipe.output), toComplete:this.toComplete })
+                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:(this.stack == Infinity ? 1 : this.stack) * (this.recipe.inputs[id] / this.recipe.output), toComplete:this.toComplete })
                 game.currentItems.push(item)
                 item.reset(game)
                 //---
@@ -93,7 +98,13 @@ class GameItem {
         if (data.remainingTime != null) this.remainingTime = data.remainingTime
         if (data.selectMachineCount != null) this.selectMachineCount = data.selectMachineCount
         //---
-        if (this.stack && this.count > this.stack) this.count = this.stack
+        if (this.toComplete && this.totalCount > this.stack) {
+            this.count += this.totalCount - this.stack
+            this.totalCount = this.stack
+        }
+        //---
+        if (this.stack != Infinity && this.count > this.stack) this.count = this.stack
+        if (this.totalCount < this.count) this.totalCount = this.count
         //---
         this.refreshTime()
     }
@@ -312,8 +323,8 @@ class Game {
     //---
     canProduce(item) {
         //---
-        if (item.stack != Infinity && item.count >= item.stack) return false
-        if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) return false
+        if (item.stack != Infinity && (item.count + item.output) > item.stack) return false
+        if (item.toComplete && item.stack != Infinity && (item.totalCount + item.output) > item.stack) return false
         //---
         if (item.inputs) {
             for (let id in item.inputs) {
@@ -388,7 +399,11 @@ class Game {
                     if (item.stack != Infinity && item.count >= item.stack) item.count = item.stack
                     //---
                     item.totalCount += (estimatedCycleCount + 1) * item.output
-                    if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) item.unassignAll()
+                    if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
+                        //---
+                        item.totalCount = item.stack
+                        item.unassignAll()
+                    }
                     //---
                     if (item.hasUnlocks) {
                         //---

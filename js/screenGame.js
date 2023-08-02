@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.6'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.7'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'

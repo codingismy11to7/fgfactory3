@@ -46,6 +46,7 @@ class GameItem {
         //---
         this.stack = this.initData.stack ? this.initData.stack : Infinity
         this.count = this.initData.count ? this.initData.count : 0
+        this.toComplete = this.initData.toComplete ? this.initData.toComplete : false
         //---
         this.status = 'wait'
         this.collapsed = false
@@ -65,7 +66,7 @@ class GameItem {
             //---
             for (let id in this.recipe.inputs) {
                 //---
-                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:Math.ceil((this.stack == Infinity ? 1 : this.stack) * this.recipe.inputs[id] / this.recipe.output) })
+                let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:Math.ceil((this.stack == Infinity ? 1 : this.stack) * this.recipe.inputs[id] / this.recipe.output), toComplete:this.toComplete })
                 game.currentItems.push(item)
                 item.reset(game)
                 //---
@@ -312,21 +313,6 @@ class Game {
         if (item.inputs) {
             for (let id in item.inputs) {
                 let inputItem = this.getItem(id)
-                if (inputItem.stack != Infinity && inputItem.count < inputItem.stack)
-                    return false
-            }
-        }
-        //---
-        return true
-    }
-    //---
-    canContinue(item) {
-        //---
-        if (item.stack != Infinity && item.count >= item.stack) return false
-        //---
-        if (item.inputs) {
-            for (let id in item.inputs) {
-                let inputItem = this.getItem(id)
                 if (inputItem.count < item.inputs[id])
                     return false
             }
@@ -394,9 +380,12 @@ class Game {
                     }
                     //---
                     item.count += (estimatedCycleCount + 1) * item.output
-                    if (item.stack != Infinity && item.count > item.stack) item.count = item.stack
                     //---
-                    if (item.stack == Infinity || (item.count >= item.stack)) item.unassignAll(this)
+                    if (item.stack != Infinity && item.count >= item.stack) {
+                        //---
+                        item.count = item.stack
+                        if (item.toComplete) item.unassignAll()
+                    }
                     //---
                     if (item.hasUnlocks) {
                         //---
@@ -404,13 +393,7 @@ class Game {
                         this.refreshUnlocked()
                     }
                     //---
-                    if (item.machine == 'manual') {
-                        //---
-                        item.status = 'wait'
-                        item.machineCount = 0
-                        item.refreshTime()
-                    }
-                    else if (this.canContinue(item)) {
+                    if (this.canProduce(item)) {
                         //---
                         if (item.inputs) {
                             for (let id in item.inputs) {
@@ -426,8 +409,7 @@ class Game {
                     else {
                         //---
                         item.status = 'wait'
-                        item.machineCount = 0
-                        item.refreshTime()
+                        item.remainingTime = item.time
                     }
                 }
                 else item.remainingTime -= seconds

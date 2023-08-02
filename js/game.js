@@ -48,6 +48,8 @@ class GameItem {
         this.count = this.initData.count ? this.initData.count : 0
         this.toComplete = this.initData.toComplete ? this.initData.toComplete : false
         //---
+        this.totalCount = this.count
+        //---
         this.status = 'wait'
         this.collapsed = false
         //---
@@ -58,7 +60,7 @@ class GameItem {
         //---
         this.machine = this.recipe.machine
         this.machineCount = 0
-        this.selectMachineCount = 'max'
+        this.selectMachineCount = '1'
         //---
         if (this.recipe.inputs) {
             //---
@@ -86,6 +88,7 @@ class GameItem {
         if (data.count != null) this.count = data.count
         if (data.status != null) this.status = data.status
         if (data.collapsed != null) this.collapsed = data.collapsed
+        if (data.totalCount != null) this.totalCount = data.totalCount
         if (data.machineCount != null) this.machineCount = data.machineCount
         if (data.remainingTime != null) this.remainingTime = data.remainingTime
         if (data.selectMachineCount != null) this.selectMachineCount = data.selectMachineCount
@@ -102,6 +105,7 @@ class GameItem {
         savedData.count = this.count
         savedData.status = this.status
         savedData.collapsed = this.collapsed
+        savedData.totalCount = this.totalCount
         savedData.machineCount = this.machineCount
         savedData.remainingTime = this.remainingTime
         savedData.selectMachineCount = this.selectMachineCount
@@ -111,19 +115,19 @@ class GameItem {
     //---
     getAddMachineCount(game) {
         //---
-        if (this.selectMachineCount == '1') return 1
-        else if (this.selectMachineCount == '5') return 5
-        else if (this.selectMachineCount == '10') return 10
-        else if (this.selectMachineCount == '100') return 100
+        if (this.selectMachineCount == '1') return Math.min(game.getAvailableCount(this.machine), 1)
+        else if (this.selectMachineCount == '5') return Math.min(game.getAvailableCount(this.machine), 5)
+        else if (this.selectMachineCount == '10') return Math.min(game.getAvailableCount(this.machine), 10)
+        else if (this.selectMachineCount == '100') return Math.min(game.getAvailableCount(this.machine), 100)
         else if (this.selectMachineCount == 'max') return game.getAvailableCount(this.machine)
     }
     //---
     getRemoveMachineCount() {
         //---
-        if (this.selectMachineCount == '1') return 1
-        else if (this.selectMachineCount == '5') return 5
-        else if (this.selectMachineCount == '10') return 10
-        else if (this.selectMachineCount == '100') return 100
+        if (this.selectMachineCount == '1') return Math.min(this.machineCount, 1)
+        else if (this.selectMachineCount == '5') return Math.min(this.machineCount, 5)
+        else if (this.selectMachineCount == '10') return Math.min(this.machineCount, 10)
+        else if (this.selectMachineCount == '100') return Math.min(this.machineCount, 100)
         else if (this.selectMachineCount == 'max') return this.machineCount
     }
     //---
@@ -309,6 +313,7 @@ class Game {
     canProduce(item) {
         //---
         if (item.stack != Infinity && item.count >= item.stack) return false
+        if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) return false
         //---
         if (item.inputs) {
             for (let id in item.inputs) {
@@ -380,12 +385,10 @@ class Game {
                     }
                     //---
                     item.count += (estimatedCycleCount + 1) * item.output
+                    if (item.stack != Infinity && item.count >= item.stack) item.count = item.stack
                     //---
-                    if (item.stack != Infinity && item.count >= item.stack) {
-                        //---
-                        item.count = item.stack
-                        if (item.toComplete) item.unassignAll()
-                    }
+                    item.totalCount += (estimatedCycleCount + 1) * item.output
+                    if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) item.unassignAll()
                     //---
                     if (item.hasUnlocks) {
                         //---
@@ -393,7 +396,13 @@ class Game {
                         this.refreshUnlocked()
                     }
                     //---
-                    if (this.canProduce(item)) {
+                    if (item.machine == 'manual') {
+                        //---
+                        item.status = 'wait'
+                        item.machineCount = 0
+                        item.refreshTime()
+                    }
+                    else if (this.canProduce(item)) {
                         //---
                         if (item.inputs) {
                             for (let id in item.inputs) {

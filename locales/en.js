@@ -61,6 +61,7 @@ var en_translations = {
     'word-close': 'Close',
     'word-completed': 'Completed',
     'word-continue': 'Continue',
+    'word-done': 'Done',
     'word-language': 'Language',
     'word-local-data': 'Local Data',
     'word-max': 'Max',

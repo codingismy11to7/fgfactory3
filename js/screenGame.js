@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.7'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.8'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -288,25 +288,19 @@ var TplItem = function(scenario, item) {
                             html += '</div>'
                         }
                         else {
-                            html += '<div class="col-auto">'
-                                html += '<i class="fas fa-lock text-danger"></i>'
-                            html += '</div>'
-                            html += '<div class="col-auto me-auto">'
-                                html += '<span>' + i18next.t(scenario.label + item.name) + '</span>'
-                            html += '</div>'
-                            for (let id in item.reqs) {
-                                let reqItem = window.app.game.getItem(id)
-                                if (reqItem.unlocked || window.app.screens['game'].showLocked) {
+                            html += '<div class="col-12">'
+                                html += '<div class="row g-2 align-items-center">'
                                     html += '<div class="col-auto">'
-                                        html += '<a href="#" onclick="window.app.doClick(\'selectItem\', { itemId:\'' + id + '\' })">' + i18next.t(scenario.label + id) + '</a>'
+                                        html += '<img src="' + scenario.img + item.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + item.name) + '">'
                                     html += '</div>'
-                                }
-                                else {
                                     html += '<div class="col-auto">'
-                                        html += '<span>' + i18next.t(scenario.label + id) + '</span>'
+                                        html += '<span>' + i18next.t(scenario.label + item.name) + '</span>'
                                     html += '</div>'
-                                }
-                            }
+                                    html += '<div class="col-auto">'
+                                        html += '<small class="text-danger">' + i18next.t('word-locked') + '</small>'
+                                    html += '</div>'
+                                html += '</div>'
+                            html += '</div>'
                         }
                     html += '</div>'
                 html += '</div>'
@@ -344,7 +338,7 @@ class ScreenGame {
     constructor() {
         //---
         this.selectedTabId = 'factory'
-        this.selectedItemId = 'furnace'
+        this.selectedItemId = 'mission-furnace'
         this.selectedMachineCount = '1'
         //---
         this.showLocked = false
@@ -405,12 +399,16 @@ class ScreenGame {
         //---
         else if (action == 'selectItem') {
             //---
+            if (this.selectedItemId == data.itemId) return
+            //---
             let node = document.getElementById('left-pane')
             node.classList.remove('open')
             //---
             node = document.getElementById(this.selectedItemId + '-tab-pane')
-            node.classList.remove('active')
-            node.classList.remove('show')
+            if (node) {
+                node.classList.remove('active')
+                node.classList.remove('show')
+            }
             //---
             this.selectedItemId = data.itemId
             //---
@@ -495,7 +493,7 @@ class ScreenGame {
         html += '<div id="left-pane" class="bg-dark">'
             html += '<div class="scrollbar nav nav-pills flex-column flex-nowrap">'
                 DATA.categories.forEach(cat => {
-                    items = window.app.game.currentItems.filter(item => item.id != 'manual' && item.cat == cat && (this.showLocked ? true : item.unlocked) /*&& (this.showCompleted ? true : (item.stack && item.count < item.stack))*/)
+                    items = window.app.game.currentItems.filter(item => item.id != 'manual' && item.cat == cat && (this.showLocked ? true : item.unlocked) && (this.showCompleted ? true : (item.stack && item.count < item.stack)))
                     if (items.length > 0) {
                         html += '<div class="w-100 p-3">'
                             html += '<div class="row g-1">'
@@ -559,25 +557,7 @@ class ScreenGame {
                 let item = window.app.game.getItem(data.id)
                 html += '<div class="scrollbar p-3 tab-pane fade' + (item.id == this.selectedItemId ? ' show active' : '') + '" id="' + item.id + '-tab-pane" role="tabpanel" aria-labelledby="' + item.id + '-tab" tabindex="0">'
                     html += '<div class="row g-1">'
-                        /*
-                        if (item.stack && item.count >= item.stack) {
-                            html += '<div class="col-12">'
-                                html += '<div class="pb-2">'
-                                    html += '<div class="row gx-2 align-items-center">'
-                                        html += '<div class="col-auto">'
-                                            html += '<img src="' + scenario.img + item.name + '.png" width="24px" height="24px">'
-                                        html += '</div>'
-                                        html += '<div class="col text-truncate">'
-                                            html += '<span class="fs-6 text-white">' + i18next.t(scenario.label + item.name) + '</span>'
-                                        html += '</div>'
-                                    html += '</div>'
-                                html += '</div>'
-                            html += '</div>'
-                            html += '<div class="col-12">'
-                                html += '<i class="fas fa-check-circle text-success"></i> <span class="text-success">' + i18next.t('word-completed') + '</span>'
-                            html += '</div>'
-                        }
-                        else*/ if (item.unlocked) {
+                        if (item.unlocked) {
                             html += '<div class="col-12">'
                                 html += '<div class="pb-2">'
                                     html += '<div class="row gx-2 align-items-center">'
@@ -611,6 +591,30 @@ class ScreenGame {
                                     html += '</div>'
                                 html += '</div>'
                             html += '</div>'
+                            if (item.desc) {
+                                html += '<div class="col-12">'
+                                    html += '<div class="pb-2">'
+                                        html += '<span>' + i18next.t(scenario.label + item.id + '-desc') + '</span>'
+                                    html += '</div>'
+                                html += '</div>'
+                            }
+                            let unlocks = scenario.recipes.filter(recipe => recipe.reqs && recipe.reqs[item.id])
+                            if (unlocks.length > 0) {
+                                html += '<div class="col-12">'
+                                    html += '<div class="pb-2">'
+                                        html += '<div class="row gx-2 align-items-center">'
+                                            html += '<div class="col-auto">'
+                                                html += '<span>' + i18next.t('word-allows') + '</span>'
+                                            html += '</div>'
+                                            unlocks.forEach(unlock => {
+                                                html += '<div class="col-auto">'
+                                                    html += '<img src="' + scenario.img + unlock.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + unlock.name) + '">'
+                                                html += '</div>'
+                                            })
+                                        html += '</div>'
+                                    html += '</div>'
+                                html += '</div>'
+                            }
                             html += TplItem(scenario, item)
                         }
                         else {
@@ -799,10 +803,17 @@ class ScreenGame {
             //---
             node = document.getElementById('itemProgress-' + item.id)
             if (node) {
-                //---
-                value = item.getProgress() + '%'
-                //---
-                if (node.style.width != value) node.style.width = value
+                if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
+                    //---
+                    style = 'd-none'
+                    if (node.className != style) node.className = style
+                }
+                else {
+                    //---
+                    value = item.getProgress() + '%'
+                    //---
+                    if (node.style.width != value) node.style.width = value
+                }
             }
 
             // Item stop button

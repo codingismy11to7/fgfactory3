@@ -300,6 +300,19 @@ class Game {
         return item.count - usedCount
     }
     //---
+    getTotalMachineCount(item) {
+        //---
+        let ret = item.machineCount
+        //---
+        for (let id in item.inputs) {
+            //---
+            let child = this.getItem(id)
+            ret += this.getTotalMachineCount(child)
+        }
+        //---
+        return ret
+    }
+    //---
     canProduce(item) {
         //---
         if (item.stack != Infinity && (item.count + item.output) > item.stack) return false

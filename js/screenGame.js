@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.8'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.9'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -501,7 +501,7 @@ class ScreenGame {
                                     html += '<span class="fs-6 text-white">' + i18next.t('cat-' + cat) + '</span>'
                                 html += '</div>'
                                 items.forEach(item => {
-                                    html += '<div class="col-12 nav-item">'
+                                    html += '<div class="col-12 nav-item position-relative">'
                                         html += '<button class="w-100 position-relative nav-link' + (item.id == this.selectedItemId ? ' active' : '') + '" id="' + item.id + '-tab" data-bs-toggle="tab" data-bs-target="#' + item.id + '-tab-pane" type="button" role="tab" aria-controls="' + item.id + '-tab-pane" onclick="window.app.doClick(\'selectItem\', { itemId:\'' + item.id + '\' })">'
                                             html += '<div class="row gx-2 align-items-center">'
                                                 if (item.unlocked) {
@@ -511,9 +511,17 @@ class ScreenGame {
                                                     html += '<div class="col text-start text-truncate">'
                                                         html += '<span>' + i18next.t(scenario.label + item.name) + '</span>'
                                                     html += '</div>'
+                                                    html += '<div class="col-auto">'
+                                                        html += '<div id="machineUsing-' + item.id + '" class="d-none"><i class="fas fa-spinner text-success"></i></div>'
+                                                    html += '</div>'
                                                     if (item.cat == 'machine') {
                                                         html += '<div class="col-auto">'
-                                                            html += '<span id="navItemAvailableCount-' + item.id + '"></span> '
+                                                            html += '<div id="manualUsing-' + item.id + '" class="d-none">'
+                                                                html += '<img src="' + scenario.img + 'manual.png" width="12px" height="12px">'
+                                                            html += '</div>'
+                                                        html += '</div>'
+                                                        html += '<div class="col-auto">'
+                                                            html += '<span id="navItemAvailableCount-' + item.id + '"></span>'
                                                         html += '</div>'
                                                     }
                                                     if (item.stack && item.count >= item.stack) {
@@ -886,6 +894,28 @@ class ScreenGame {
                     //---
                     style = 'd-none'
                     if (value > 0) style = 'badge text-bg-success'
+                    if (node.className != style) node.className = style
+                }
+
+                // Nav item manual using
+                //---
+                if (item.cat == 'machine') {
+                    node = document.getElementById('manualUsing-' + item.id)
+                    if (node) {
+                        //---
+                        style = 'd-none'
+                        if (item.machineCount > 0) style = 'badge text-bg-success'
+                        if (node.className != style) node.className = style
+                    }
+                }
+
+                // Nav item machine using
+                //---
+                node = document.getElementById('machineUsing-' + item.id)
+                if (node) {
+                    //---
+                    style = 'd-none'
+                    if (window.app.game.getTotalMachineCount(item) > 0) style = 'rotate'
                     if (node.className != style) node.className = style
                 }
             })

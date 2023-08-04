@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.12'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.13'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -332,7 +332,7 @@ var TplItem = function(scenario, item) {
                     html += '</div>'
                 html += '</div>'
             html += '</div>'
-            if (item.inputs) {
+            if (item.children) {
                 html += '<div id="collapse' + item.id + '" class="collapse col-12' + (item.collapsed ? '' : ' show') + '">'
                     html += '<div class="row g-1">'
                         html += '<div class="col-auto d-flex justify-content-center" style="width:20px;">'
@@ -340,15 +340,14 @@ var TplItem = function(scenario, item) {
                         html += '</div>'
                         html += '<div class="col">'
                             html += '<div class="row g-1">'                
-                                for (let id in item.inputs) {
+                                item.children.forEach(child => {
                                     html += '<div class="position-relative col-12">'
                                         html += '<div class="row g-1">' 
                                             html += '<div class="position-absolute border-bottom" style="top:13.5px; left:-10px; width:10px;"></div>'
-                                            let child = window.app.game.getItem(id)
                                             html += TplItem(scenario, child)
                                         html += '</div>'
                                     html += '</div>'
-                                }
+                                })
                             html += '</div>'
                         html += '</div>'
                     html += '</div>'
@@ -747,16 +746,18 @@ class ScreenGame {
         // Item count
         //---
         node = document.getElementById('itemCount-' + item.id)
-        //---
-        if (item.toComplete) value = item.totalCount
-        else value = item.count
-        //---                
-        html = formatNumber(value)
-        if (node.innerHTML != html) node.innerHTML = html
-        //---
-        style = 'text-normal'
-        if (value > 0) style = 'text-white'
-        if (node.className != style) node.className = style
+        if (node) {
+            //---
+            if (item.toComplete) value = item.totalCount
+            else value = item.count
+            //---                
+            html = formatNumber(value)
+            if (node.innerHTML != html) node.innerHTML = html
+            //---
+            style = 'text-normal'
+            if (value > 0) style = 'text-white'
+            if (node.className != style) node.className = style
+        }
         
         // Item available count
         //---
@@ -856,13 +857,7 @@ class ScreenGame {
         }
         
         //---
-        if (item.collapsed == false && item.inputs) {
-            for (let id in item.inputs) {
-                //---
-                let child = window.app.game.getItem(id)
-                this.refreshItem(child)
-            }
-        }
+        if (item.collapsed == false && item.children) item.children.forEach(child => { this.refreshItem(child) })
     }
     //---
     refresh() {

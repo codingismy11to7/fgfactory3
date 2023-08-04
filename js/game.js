@@ -67,15 +67,21 @@ class GameItem {
         this.machineCount = 0
         this.selectMachineCount = '1'
         //---
+        this.parentItem = null
+        //---
         if (this.recipe.inputs) {
             //---
             this.inputs = {}
+            this.children = []
             //---
             for (let id in this.recipe.inputs) {
                 //---
                 let item = new GameItem({ id:this.id + '-' + id, cat:'item', recipeName:id, stack:(this.stack == Infinity ? 1 : this.stack) * (this.recipe.inputs[id] / this.recipe.output), toComplete:this.toComplete })
                 game.currentItems.push(item)
                 item.reset(game)
+                //---
+                item.parentItem = this
+                this.children.push(item)
                 //---
                 this.inputs[item.id] = this.recipe.inputs[id]
             }
@@ -167,11 +173,7 @@ class GameItem {
         //---
         this.refreshTime()
         //---
-        for (let id in this.inputs) {
-            //---
-            let child = game.getItem(id)
-            child.unassignAll(game)
-        }
+        if (this.children) this.children.forEach(child => { child.unassignAll(game) })
     }
 }
 //---
@@ -302,11 +304,7 @@ class Game {
         //---
         let ret = item.machineCount
         //---
-        for (let id in item.inputs) {
-            //---
-            let child = this.getItem(id)
-            ret += this.getTotalMachineCount(child)
-        }
+        if (item.children) item.children.forEach(child => { ret += this.getTotalMachineCount(child) })
         //---
         return ret
     }

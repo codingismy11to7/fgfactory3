@@ -45,7 +45,7 @@ class GameItem {
     reset(game) {
         //---
         this.recipe = game.currentScenario.recipes.find(recipe => recipe.name == this.recipeName)
-        //console.log(this.recipeName)
+        console.log(this.recipeName)
         //---
         this.stack = this.initData.stack ? Math.ceil(this.initData.stack) : Infinity
         if (this.stack != Infinity && this.recipe.output != 1) {
@@ -254,7 +254,7 @@ class Game {
         //---
         for (let id in reqs) {
             //---
-            //console.log(id)
+            console.log(id)
             let item = this.getItem(id)
             if (item.count < reqs[id]) check = false
         }
@@ -437,6 +437,7 @@ class Game {
     //---
     canAddMachineCount(item) {
         //---
+        if (!item.unlocked) return false
         if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) return false
         //---
         let addCount = item.getAddMachineCount(this)

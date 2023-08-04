@@ -100,6 +100,9 @@ var en_translations = {
     //---
     'fto1-mission-defense': 'Defense',
     'fto1-mission-defense-desc': '<div class="mb-2">As you are on an hostile planet, you have to defend your factory and yourself. Walls are a defensive structure that prevents both the player and enemies from passing. They can be used to shield Gun turrets so they will be able to fight enemies longer without being destroyed, and can be used to protect parts of the factory from enemies.</div><div class="mb-2">Gates are a variant of walls that act as a safe opening in walls that only you can use. Then Tank is a heavy armored fighting vehicle with a submachine gun, a short range flamethrower and a powerful cannon.</div>',
+    //---
+    'fto1-mission-equipment': 'Equipment',
+    'fto1-mission-equipment-desc': '<div class="mb-2">Factory protections are in place so now it is time to protect yourselves. Power armor MK2 is the ultimate in personal protection and customization. Equipment modules can be added to Power armor MK2 to give you various bonuses.</div>',
     
     //---
     'fto1-assembler': 'Assembling machine',
@@ -139,7 +142,7 @@ var en_translations = {
     'fto1-flamethrower': 'Flamethrower',
     'fto1-fluid-wagon': 'Fluid wagon',
     'fto1-furnace-3': 'Electric furnace',
-    'fto1-fusion-reactor': 'Portable fusion reactor',
+    'fto1-portable-fusion-reactor': 'Portable fusion reactor',
     'fto1-gate': 'Gate',
     'fto1-gear': 'Iron gear wheel',
     'fto1-green-pack': 'Logistic science pack',
@@ -157,7 +160,9 @@ var en_translations = {
     'fto1-lubricant': 'Lubricant',
     'fto1-magazine': 'Firearm magazine',
     'fto1-magazine-2': 'Piercing rounds magazine',
+    'fto1-nightvision': 'Nightvision',
     'fto1-oil': 'Crude oil',
+    'fto1-personal-roboport': 'Personal roboport MK2',
     'fto1-petrol': 'Petroleum gas',
     'fto1-pipe': 'Pipe',
     'fto1-plastic': 'Plastic bar',
@@ -191,7 +196,7 @@ var en_translations = {
     
     //---
     'fto1-accumulator-tech': 'Electric energy accumulators',
-    'fto1-armor-tech': 'Power armor MK2',
+    'fto1-armor-tech': 'Power armor MK2 tech',
     'fto1-artillery': 'Artillery',
     'fto1-automation': 'Automation',
     'fto1-automation-2': 'Automation 2',
@@ -210,7 +215,8 @@ var en_translations = {
     'fto1-flammables': 'Flammables',
     'fto1-fluid-handling': 'Fluid handling',
     'fto1-fluid-wagon-tech': 'Fluid wagon tech',
-    'fto1-fusion-reactor-tech': 'Portable fusion reactor tech',
+    'fto1-personal-roboport-tech': 'Personal roboport MK2 tech',
+    'fto1-portable-fusion-reactor-tech': 'Portable fusion reactor tech',
     'fto1-gate-tech': 'Gate tech',
     'fto1-green-tech': 'Logistic science',
     'fto1-grey-tech': 'Military science',
@@ -223,6 +229,7 @@ var en_translations = {
     'fto1-military-2': 'Military 2',
     'fto1-military-3': 'Military 3',
     'fto1-military-4': 'Military 4',
+    'fto1-nightvision-tech': 'Nightvision equipment',
     'fto1-oil-tech': 'Oil processing',
     'fto1-oil-tech-2': 'Advanced oil processing',
     'fto1-plastics': 'Plastics',

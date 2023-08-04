@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.9'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.10'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -228,6 +228,7 @@ var TplItem = function(scenario, item) {
                 html += '<div class="card card-body">'
                     html += '<div class="row gx-3 gy-2 align-items-center">'
                         if (item.unlocked) {
+                            let machine = window.app.game.getItem(item.machine)
                             html += '<div class="col-12 col-md">'
                                 html += '<div class="row g-2 align-items-center">'
                                     if (item.inputs) {
@@ -249,47 +250,73 @@ var TplItem = function(scenario, item) {
                                             html += ' <span id="itemAvailableCount-' + item.id + '"></span>'
                                         html += '</div>'
                                     }
-                                    html += '<div class="ms-auto col-auto text-end" style="width:65px;">'
-                                        html += '<small id="itemRemainingTime-' + item.id + '"></small>'
-                                        html += '<div class="progress mt-1" style="height:3px;">'
-                                            html += '<div id="itemProgress-' + item.id + '" class="progress-bar bg-success" style="width:0%;"></div>'
+                                    if (machine.unlocked) {
+                                        html += '<div class="ms-auto col-auto text-end" style="width:65px;">'
+                                            html += '<small id="itemRemainingTime-' + item.id + '"></small>'
+                                            html += '<div class="progress mt-1" style="height:3px;">'
+                                                html += '<div id="itemProgress-' + item.id + '" class="progress-bar bg-success" style="width:0%;"></div>'
+                                            html += '</div>'
+                                        html += '</div>'
+                                    }
+                                html += '</div>'
+                            html += '</div>'
+                            if (machine.unlocked) {
+                                html += '<div class="col-12 col-md-auto">'
+                                    html += '<div class="row g-2 align-items-center justify-content-end">'
+                                        html += '<div class="col-auto">'
+                                            html += '<img src="' + scenario.img + item.machine + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + item.machine) + '">'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<span><small class="opacity-50">x</small> <span id="itemMachineCount-' + item.id + '"></span></span>'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<select id="machineCountSelect-' + item.id + '" class="form-control form-control-sm" onchange="window.app.doClick(\'setMachineSelectCount\', { itemId:\'' + item.id + '\', count:this.value })">'
+                                                html += '<option' + (item.selectMachineCount == '1' ? ' selected' : '') + '  value="1">1</option>'
+                                                html += '<option' + (item.selectMachineCount == '5' ? ' selected' : '') + '  value="5">5</option>'
+                                                html += '<option' + (item.selectMachineCount == '10' ? ' selected' : '') + '  value="10">10</option>'
+                                                html += '<option' + (item.selectMachineCount == '100' ? ' selected' : '') + '  value="100">100</option>'
+                                                html += '<option' + (item.selectMachineCount == 'max' ? ' selected' : '') + '  value="max">' + i18next.t('word-max') + '</option>'
+                                            html += '</select>'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<button type="button" id="itemRemoveMachineBtn-' + item.id + '" class="btn btn-outline-danger" onclick="window.app.doClick(\'removeMachineCount\', { itemId:\'' + item.id + '\' })">'
+                                                html += '<i class="fas fa-fw fa-minus-circle"></i>'
+                                            html += '</button>'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<button type="button" id="itemAddMachineBtn-' + item.id + '" class="btn btn-outline-warning" onclick="window.app.doClick(\'addMachineCount\', { itemId:\'' + item.id + '\' })">'
+                                                html += '<i class="fas fa-fw fa-plus-circle"></i>'
+                                            html += '</button>'
                                         html += '</div>'
                                     html += '</div>'
                                 html += '</div>'
-                            html += '</div>'
-                            html += '<div class="col-12 col-md-auto">'
-                                html += '<div class="row g-2 align-items-center justify-content-end">'
-                                    html += '<div class="col-auto">'
-                                        html += '<img src="' + scenario.img + item.machine + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + item.machine) + '">'
-                                    html += '</div>'
-                                    html += '<div class="col-auto">'
-                                        html += '<span><small class="opacity-50">x</small> <span id="itemMachineCount-' + item.id + '"></span></span>'
-                                    html += '</div>'
-                                    html += '<div class="col-auto">'
-                                        html += '<select id="machineCountSelect-' + item.id + '" class="form-control form-control-sm" onchange="window.app.doClick(\'setMachineSelectCount\', { itemId:\'' + item.id + '\', count:this.value })">'
-                                            html += '<option' + (item.selectMachineCount == '1' ? ' selected' : '') + '  value="1">1</option>'
-                                            html += '<option' + (item.selectMachineCount == '5' ? ' selected' : '') + '  value="5">5</option>'
-                                            html += '<option' + (item.selectMachineCount == '10' ? ' selected' : '') + '  value="10">10</option>'
-                                            html += '<option' + (item.selectMachineCount == '100' ? ' selected' : '') + '  value="100">100</option>'
-                                            html += '<option' + (item.selectMachineCount == 'max' ? ' selected' : '') + '  value="max">' + i18next.t('word-max') + '</option>'
-                                        html += '</select>'
-                                    html += '</div>'
-                                    html += '<div class="col-auto">'
-                                        html += '<button type="button" id="itemRemoveMachineBtn-' + item.id + '" class="btn btn-outline-danger" onclick="window.app.doClick(\'removeMachineCount\', { itemId:\'' + item.id + '\' })">'
-                                            html += '<i class="fas fa-fw fa-minus-circle"></i>'
-                                        html += '</button>'
-                                    html += '</div>'
-                                    html += '<div class="col-auto">'
-                                        html += '<button type="button" id="itemAddMachineBtn-' + item.id + '" class="btn btn-outline-warning" onclick="window.app.doClick(\'addMachineCount\', { itemId:\'' + item.id + '\' })">'
-                                            html += '<i class="fas fa-fw fa-plus-circle"></i>'
-                                        html += '</button>'
+                            }
+                            else {
+                                html += '<div class="col-12 col-md-auto">'
+                                    html += '<div class="row g-2 align-items-center justify-content-end">'
+                                        html += '<div class="col-auto">'
+                                            html += '<img src="' + scenario.img + machine.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + machine.name) + '">'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<span>' + i18next.t(scenario.label + machine.name) + '</span>'
+                                        html += '</div>'
+                                        html += '<div class="col-auto">'
+                                            html += '<small class="text-danger">' + i18next.t('word-locked') + '</small>'
+                                        html += '</div>'
                                     html += '</div>'
                                 html += '</div>'
-                            html += '</div>'
+                            }
                         }
                         else {
                             html += '<div class="col-12">'
                                 html += '<div class="row g-2 align-items-center">'
+                                    if (item.inputs) {
+                                        html += '<div class="col-auto px-0">'
+                                            html += '<button type="button" class="btn" data-bs-toggle="collapse" data-bs-target="#collapse' + item.id + '" aria-expanded="' + (item.collapsed ? 'false' : 'true') + '" aria-controls="collapse' + item.id + '" onclick="window.app.doClick(\'toggleCollapse\', { itemId:\'' + item.id + '\' })">'
+                                                html += '<i class="fas fa-chevron-down"></i>'
+                                            html += '</button>'
+                                        html += '</div>'
+                                    }
                                     html += '<div class="col-auto">'
                                         html += '<img src="' + scenario.img + item.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + item.name) + '">'
                                     html += '</div>'
@@ -305,7 +332,7 @@ var TplItem = function(scenario, item) {
                     html += '</div>'
                 html += '</div>'
             html += '</div>'
-            if (item.unlocked && item.inputs) {
+            if (item.inputs) {
                 html += '<div id="collapse' + item.id + '" class="collapse col-12' + (item.collapsed ? '' : ' show') + '">'
                     html += '<div class="row g-1">'
                         html += '<div class="col-auto d-flex justify-content-center" style="width:20px;">'
@@ -606,22 +633,24 @@ class ScreenGame {
                                     html += '</div>'
                                 html += '</div>'
                             }
-                            let unlocks = scenario.recipes.filter(recipe => recipe.reqs && recipe.reqs[item.id])
-                            if (unlocks.length > 0) {
-                                html += '<div class="col-12">'
-                                    html += '<div class="pb-2">'
-                                        html += '<div class="row gx-2 align-items-center">'
-                                            html += '<div class="col-auto">'
-                                                html += '<span>' + i18next.t('word-allows') + '</span>'
-                                            html += '</div>'
-                                            unlocks.forEach(unlock => {
+                            if (item.cat == 'tech') {
+                                let unlocks = scenario.recipes.filter(recipe => recipe.reqs && recipe.reqs[item.id])
+                                if (unlocks.length > 0) {
+                                    html += '<div class="col-12">'
+                                        html += '<div class="pb-2">'
+                                            html += '<div class="row gx-2 align-items-center">'
                                                 html += '<div class="col-auto">'
-                                                    html += '<img src="' + scenario.img + unlock.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + unlock.name) + '">'
+                                                    html += '<span>' + i18next.t('word-allows') + '</span>'
                                                 html += '</div>'
-                                            })
+                                                unlocks.forEach(unlock => {
+                                                    html += '<div class="col-auto">'
+                                                        html += '<img src="' + scenario.img + unlock.name + '.png" width="24px" height="24px" data-bs-toggle="tooltip" data-bs-title="' + i18next.t(scenario.label + unlock.name) + '">'
+                                                    html += '</div>'
+                                                })
+                                            html += '</div>'
                                         html += '</div>'
                                     html += '</div>'
-                                html += '</div>'
+                                }
                             }
                             html += TplItem(scenario, item)
                         }
@@ -823,36 +852,11 @@ class ScreenGame {
                     if (node.style.width != value) node.style.width = value
                 }
             }
-
-            // Item stop button
-            //---
-            node = document.getElementById('itemStopBtn-' + item.id)
-            if (node) {
-                //---
-                value = window.app.game.canStopLine(item)
-                //---
-                style = 'btn btn-outline-danger'
-                if (value == false) style += ' disabled'
-                if (node.className != style) node.className = style
-            }
-            
-            // Item start button
-            //---
-            node = document.getElementById('itemStartBtn-' + item.id)
-            if (node) {
-                //---
-                value = window.app.game.canStartLine(item)
-                //---
-                style = 'btn btn-outline-warning'
-                if (value == false) style += ' disabled'
-                if (node.className != style) node.className = style
-            }
-            
-            //---
-            if (item.inputs) {
-                for (let id in item.inputs) {
-                    this.refreshItem(id)
-                }
+        }
+        //---
+        if (item.inputs) {
+            for (let id in item.inputs) {
+                this.refreshItem(id)
             }
         }
     }

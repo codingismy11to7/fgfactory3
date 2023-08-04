@@ -393,12 +393,12 @@ class Game {
                         //---
                         item.totalCount = item.stack
                         item.unassignAll(this)
-                    }
-                    //---
-                    if (item.hasUnlocks) {
                         //---
-                        refresh = true
-                        this.refreshUnlocked()
+                        if (item.hasUnlocks) {
+                            //---
+                            refresh = true
+                            this.refreshUnlocked()
+                        }
                     }
                     //---
                     if (this.canProduce(item)) {

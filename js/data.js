@@ -223,10 +223,10 @@ var DATA = {
                 // Machines
                 //---
                 {	id:'manual',	cat:'machine',	recipeName:'manual',	count:1	},
-                {	id:'furnace',	cat:'machine',	recipeName:'furnace',	count:1,	hasUnlocks:true	},
-                {	id:'assembler',	cat:'machine',	recipeName:'assembler',	count:1,	hasUnlocks:true	},
+                {	id:'furnace',	cat:'machine',	recipeName:'furnace',	count:1	},
+                {	id:'assembler',	cat:'machine',	recipeName:'assembler',	count:1	},
                 {	id:'miner',	cat:'machine',	recipeName:'miner',	count:1	},
-                {	id:'lab',	cat:'machine',	recipeName:'lab',	count:1,	hasUnlocks:true	},
+                {	id:'lab',	cat:'machine',	recipeName:'lab',	count:1	},
                 {	id:'pump',	cat:'machine',	recipeName:'pump'	},
                 {	id:'pumpjack',	cat:'machine',	recipeName:'pumpjack'	},
                 {	id:'refinery',	cat:'machine',	recipeName:'refinery'	},

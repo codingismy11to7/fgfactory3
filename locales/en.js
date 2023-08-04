@@ -145,7 +145,7 @@ var en_translations = {
     'fto1-copper': 'Copper ore',
     'fto1-copper-plate': 'Copper plate',
     'fto1-engine': 'Engine unit',
-    'fto1-engine-2': 'Eclectric engine unit',
+    'fto1-engine-2': 'Electric engine unit',
     'fto1-explosives': 'Explosives',
     'fto1-exoskeleton': 'Exoskeleton',
     'fto1-flamethrower': 'Flamethrower',

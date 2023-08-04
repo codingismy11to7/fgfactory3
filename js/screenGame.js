@@ -24,7 +24,7 @@ var TplScreenGame = function(data) {
                         html += '<div class="dropdown">'
                             html += '<button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">'
                                 html += '<div class="badge text-bg-danger">'
-                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.10'
+                                    html += '<i class="fas fa-exclamation-triangle"></i> v.dev 0.11'
                                 html += '</div>'
                             html += '</button>'
                             html += '<div class="dropdown-menu">'
@@ -343,7 +343,7 @@ var TplItem = function(scenario, item) {
                                 for (let id in item.inputs) {
                                     html += '<div class="position-relative col-12">'
                                         html += '<div class="row g-1">' 
-                                            html += '<div class="position-absolute border-bottom" style="top:17.5px; left:-10px; width:10px;"></div>'
+                                            html += '<div class="position-absolute border-bottom" style="top:13.5px; left:-10px; width:10px;"></div>'
                                             let child = window.app.game.getItem(id)
                                             html += TplItem(scenario, child)
                                         html += '</div>'
@@ -370,6 +370,8 @@ class ScreenGame {
         //---
         this.showLocked = false
         this.showCompleted = false
+        //---
+        this.refreshNavList = []
     }
     //---
     load(data) {
@@ -513,8 +515,10 @@ class ScreenGame {
     //---
     displayFactoryTab() {
         //---
-        let scenario = window.app.game.currentScenario
+        this.refreshNavList = []
+        //---
         let items
+        let scenario = window.app.game.currentScenario
         //---
         let html = ''
         html += '<div id="left-pane" class="bg-dark">'
@@ -562,6 +566,9 @@ class ScreenGame {
                                                             if (item.stack != Infinity) html += ' <small>/' + formatNumber(item.stack) + '</small>'
                                                         html += '</div>'
                                                     }
+                                                    //---
+                                                    item.toRefreshCount = true
+                                                    this.refreshNavList.push(item)
                                                 }
                                                 else {
                                                     html += '<div class="col-auto text-center" style="width:32px;">'
@@ -733,130 +740,127 @@ class ScreenGame {
         node.innerHTML = html
     }
     //---
-    refreshItem(itemId) {
+    refreshItem(item) {
         //---
         let node, value, html = '', style = ''
+            
+        // Item count
         //---
-        let item = window.app.game.getItem(itemId)
-        if (item && item.unlocked) {
-            
-            // Item count
+        node = document.getElementById('itemCount-' + item.id)
+        //---
+        if (item.toComplete) value = item.totalCount
+        else value = item.count
+        //---                
+        html = formatNumber(value)
+        if (node.innerHTML != html) node.innerHTML = html
+        //---
+        style = 'text-normal'
+        if (value > 0) style = 'text-white'
+        if (node.className != style) node.className = style
+        
+        // Item available count
+        //---
+        node = document.getElementById('itemAvailableCount-' + item.id)
+        if (node) {
             //---
-            node = document.getElementById('itemCount-' + item.id)
-            if (node) {                    
+            value = window.app.game.getAvailableCount(item.id)
+            //---
+            html = formatNumber(value)
+            if (node.innerHTML != html) node.innerHTML = html
+            //---
+            style = 'd-none'
+            if (value > 0) style = 'badge text-bg-success'
+            if (node.className != style) node.className = style
+        }
+        
+        // Item machine count
+        //---
+        node = document.getElementById('itemMachineCount-' + item.id)
+        if (node) {                    
+            //---
+            value = item.machineCount
+            //---
+            html = formatNumber(value)
+            if (node.innerHTML != html) node.innerHTML = html
+            //---
+            style = 'text-normal'
+            if (value > 0) style = 'text-white'
+            if (node.className != style) node.className = style
+        }
+        
+        // Item remove machine button
+        //---
+        node = document.getElementById('itemRemoveMachineBtn-' + item.id)
+        if (node) {                    
+            //---
+            value = window.app.game.canRemoveMachineCount(item)
+            //---
+            style = 'btn btn-outline-danger'
+            if (value == false) style += ' disabled'
+            if (node.className != style) node.className = style
+        }
+        
+        // Item add machine button
+        //---
+        node = document.getElementById('itemAddMachineBtn-' + item.id)
+        if (node) {                    
+            //---
+            value = window.app.game.canAddMachineCount(item)
+            //---
+            style = 'btn btn-outline-warning'
+            if (value == false) style += ' disabled'
+            if (node.className != style) node.className = style
+        }
+        
+        // Item remaining time
+        //---
+        node = document.getElementById('itemRemainingTime-' + item.id)
+        if (node) {
+            if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
                 //---
-                if (item.toComplete) value = item.totalCount
-                else value = item.count
-                //---                
-                html = formatNumber(value)
+                html = i18next.t('word-done')
                 if (node.innerHTML != html) node.innerHTML = html
                 //---
-                style = 'text-normal'
-                if (value > 0) style = 'text-white'
+                style = 'text-success'
                 if (node.className != style) node.className = style
             }
-            
-            // Item available count
-            //---
-            node = document.getElementById('itemAvailableCount-' + item.id)
-            if (node) {
+            else {
                 //---
-                value = window.app.game.getAvailableCount(item.id)
+                value = item.remainingTime
                 //---
-                html = formatNumber(value)
+                html = formatTime(value)
                 if (node.innerHTML != html) node.innerHTML = html
                 //---
-                style = 'd-none'
-                if (value > 0) style = 'badge text-bg-success'
+                style = ''
+                if (item.status == 'wait' && item.machineCount > 0) style = 'text-danger'
+                else if (item.machineCount > 0) style = 'text-white'
                 if (node.className != style) node.className = style
-            }
-            
-            // Item machine count
-            //---
-            node = document.getElementById('itemMachineCount-' + item.id)
-            if (node) {                    
-                //---
-                value = item.machineCount
-                //---
-                html = formatNumber(value)
-                if (node.innerHTML != html) node.innerHTML = html
-                //---
-                style = 'text-normal'
-                if (value > 0) style = 'text-white'
-                if (node.className != style) node.className = style
-            }
-            
-            // Item remove machine button
-            //---
-            node = document.getElementById('itemRemoveMachineBtn-' + item.id)
-            if (node) {                    
-                //---
-                value = window.app.game.canRemoveMachineCount(item)
-                //---
-                style = 'btn btn-outline-danger'
-                if (value == false) style += ' disabled'
-                if (node.className != style) node.className = style
-            }
-            
-            // Item add machine button
-            //---
-            node = document.getElementById('itemAddMachineBtn-' + item.id)
-            if (node) {                    
-                //---
-                value = window.app.game.canAddMachineCount(item)
-                //---
-                style = 'btn btn-outline-warning'
-                if (value == false) style += ' disabled'
-                if (node.className != style) node.className = style
-            }
-            
-            // Item remaining time
-            //---
-            node = document.getElementById('itemRemainingTime-' + item.id)
-            if (node) {
-                if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
-                    //---
-                    html = i18next.t('word-done')
-                    if (node.innerHTML != html) node.innerHTML = html
-                    //---
-                    style = 'text-success'
-                    if (node.className != style) node.className = style
-                }
-                else {
-                    //---
-                    value = item.remainingTime
-                    //---
-                    html = formatTime(value)
-                    if (node.innerHTML != html) node.innerHTML = html
-                    //---
-                    style = ''
-                    if (item.status == 'wait' && item.machineCount > 0) style = 'text-danger'
-                    else if (item.machineCount > 0) style = 'text-white'
-                    if (node.className != style) node.className = style
-                }
-            }
-            
-            // Item progress
-            //---
-            node = document.getElementById('itemProgress-' + item.id)
-            if (node) {
-                if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
-                    //---
-                    style = 'd-none'
-                    if (node.className != style) node.className = style
-                }
-                else {
-                    //---
-                    value = item.getProgress() + '%'
-                    //---
-                    if (node.style.width != value) node.style.width = value
-                }
             }
         }
+        
+        // Item progress
         //---
-        if (item.inputs) {
+        node = document.getElementById('itemProgress-' + item.id)
+        if (node) {
+            if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
+                //---
+                style = 'd-none'
+                if (node.className != style) node.className = style
+            }
+            else {
+                //---
+                value = item.getProgress() + '%'
+                //---
+                if (node.style.width != value) node.style.width = value
+            }
+        }
+        
+        //---
+        if (item.collapsed == false && item.inputs) {
             for (let id in item.inputs) {
-                this.refreshItem(id)
+                //---
+                let child = window.app.game.getItem(id)
+                this.refreshItem(child)
             }
         }
     }
@@ -868,28 +872,27 @@ class ScreenGame {
             let node, value, html = '', style = ''
 
             //---
-            let items = window.app.game.currentItems.filter(item => item.unlocked)
-            items.forEach(item => {
+            this.refreshNavList.forEach(item => {
                 
                 // Nav item count
                 //---
                 node = document.getElementById('navItemCount-' + item.id)
-                if (node) {                    
-                    //---
-                    value = item.count
-                    //---
-                    html = formatNumber(value)
-                    if (node.innerHTML != html) node.innerHTML = html
-                    //---
-                    style = 'opacity-50'
-                    if (value > 0) style = 'fw-bold'
-                    if (node.className != style) node.className = style
-                }
-                
-                // Nav item available count
                 //---
-                node = document.getElementById('navItemAvailableCount-' + item.id)
-                if (node) {
+                value = item.count
+                //---
+                html = formatNumber(value)
+                if (node.innerHTML != html) node.innerHTML = html
+                //---
+                style = 'opacity-50'
+                if (value > 0) style = 'fw-bold'
+                if (node.className != style) node.className = style
+                
+                //---
+                if (item.cat == 'machine') {
+                    
+                    // Nav item available count
+                    //---
+                    node = document.getElementById('navItemAvailableCount-' + item.id)
                     //---
                     value = window.app.game.getAvailableCount(item.id)
                     //---
@@ -899,33 +902,29 @@ class ScreenGame {
                     style = 'd-none'
                     if (value > 0) style = 'badge text-bg-success'
                     if (node.className != style) node.className = style
-                }
 
-                // Nav item manual using
-                //---
-                if (item.cat == 'machine') {
+                    // Nav item manual using
+                    //---
                     node = document.getElementById('manualUsing-' + item.id)
-                    if (node) {
-                        //---
-                        style = 'd-none'
-                        if (item.machineCount > 0) style = 'badge text-bg-success'
-                        if (node.className != style) node.className = style
-                    }
+                    //---
+                    style = 'd-none'
+                    if (item.machineCount > 0) style = 'badge text-bg-success'
+                    if (node.className != style) node.className = style
                 }
 
                 // Nav item machine using
                 //---
                 node = document.getElementById('machineUsing-' + item.id)
-                if (node) {
-                    //---
-                    style = 'd-none'
-                    if (window.app.game.getTotalMachineCount(item) > 0) style = 'rotate'
-                    if (node.className != style) node.className = style
-                }
+                //---
+                style = 'd-none'
+                if (window.app.game.getTotalMachineCount(item) > 0) style = 'rotate'
+                if (node.className != style) node.className = style
             })
             
+            // Selected item pane
             //---
-            this.refreshItem(this.selectedItemId)
+            let item = window.app.game.getItem(this.selectedItemId)
+            this.refreshItem(item)
         }
     }
 }

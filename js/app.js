@@ -109,13 +109,13 @@ class App {
             let refresh = this.game.doTick(deltaMs)
             if (refresh) this.screens['game'].displayFactoryTab()
             //---
-            /*if (this.game.isVictoryReached()) {
+            if (this.game.isVictoryReached()) {
                 //---
                 this.game.doVictory()
                 //---
                 this.showModal('modalVictory')
                 this.screens['game'].displayScenariosTab()
-            }*/
+            }
             //---
             this.screens['game'].refresh()
             //---

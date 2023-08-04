@@ -103,6 +103,15 @@ var en_translations = {
     //---
     'fto1-mission-equipment': 'Equipment',
     'fto1-mission-equipment-desc': '<div class="mb-2">Factory protections are in place so now it is time to protect yourselves. Power armor MK2 is the ultimate in personal protection and customization. Equipment modules can be added to Power armor MK2 to give you various bonuses.</div>',
+    //---
+    'fto1-mission-spidertron': 'Spidertron',
+    'fto1-mission-spidertron-desc': '<div class="mb-2">The spidertron is a versatile vehicle capable of traversing rough terrain. It\'s equipped with four fast-firing rocket launchers capable of manual or automatic targeting.</div>',
+    //---
+    'fto1-mission-rocket': 'Rocket part',
+    'fto1-mission-rocket-desc': '<div class="mb-2">Rocket parts are created inside of the Rocket silo. Each completed part contributes 1% towards the completion of the rocket. Once all 100 rocket parts have been completed, the Rocket silo will have a rocket ready to be launched within the silo.</div><div class="mb-2">One more step and you will be able to escape from this hostile planet!</div>',
+    //---
+    'fto1-mission-satellite': 'Satellite',
+    'fto1-mission-satellite-desc': '<div class="mb-2">The Satellite is used to navigate through Space. The crafted Satellite must be placed into the Rocket before launch. Then you leave from this hostile planet...</div>',
     
     //---
     'fto1-assembler': 'Assembling machine',
@@ -175,12 +184,10 @@ var en_translations = {
     'fto1-rocket-control-unit': 'Rocket control unit',
     'fto1-rocket-fuel': 'Rocket fuel',
     'fto1-rocket-launcher': 'Rocket launcher',
-    'fto1-rocket-part': 'Rocket part',
     'fto1-satellite': 'Satellite',
     'fto1-solar-panel': 'Solar panel',
     'fto1-solid-fuel': 'Solid fuel',
     'fto1-speed-module': 'Speed module',
-    'fto1-spidertron': 'Spidertron',
     'fto1-steel': 'Steel plate',
     'fto1-stick': 'Iron stick',
     'fto1-stone': 'Stone',
@@ -237,7 +244,7 @@ var en_translations = {
     'fto1-purple-tech': 'Production science',
     'fto1-railway': 'Railway',
     'fto1-robotics': 'Robotics',
-    'fto1-rocket-tech': 'Rocket silo',
+    'fto1-rocket-tech': 'Rocket tech',
     'fto1-rocket-control-unit-tech': 'Rocket control unit tech',
     'fto1-rocket-fuel-tech': 'Rocket fuel tech',
     'fto1-rocketry': 'Rocketry',

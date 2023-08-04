@@ -14,6 +14,7 @@ var DATA = {
                 {	name:'mission-furnace',	machine:'manual',	time:0.5,	output:1,	inputs:{ 'stone':5 }	},
                 //---
                 {	name:'manual'	},
+                {	name:'miner',	machine:'manual',	time:5,	output:1,	inputs:{ 'iron-plate':6, 'gear':6, 'stone':10 }	},
                 //---
                 {	name:'stone',	machine:'miner',	time:1,	output:1 },	
 
@@ -23,17 +24,16 @@ var DATA = {
                 //---
                 {	name:'furnace',	reqs:{ 'mission-furnace':1 },	machine:'manual',	time:0.5,	output:1,	inputs:{ 'stone':5 }	},
                 //---
-                {	name:'copper',	machine:'miner',	time:1,	output:1 },	
-                {	name:'copper-plate',	machine:'furnace',	time:3.2,	output:1,	inputs:{ 'copper':1 }	},
-                {	name:'iron',	machine:'miner',	time:1,	output:1 },	
-                {	name:'iron-plate',	machine:'furnace',	time:3.2,	output:1,	inputs:{ 'iron':1 }	},
+                {	name:'copper',	reqs:{ 'mission-furnace':1 },	machine:'miner',	time:1,	output:1 },	
+                {	name:'copper-plate',	reqs:{ 'mission-furnace':1 },	machine:'furnace',	time:3.2,	output:1,	inputs:{ 'copper':1 }	},
+                {	name:'iron',	reqs:{ 'mission-furnace':1 },	machine:'miner',	time:1,	output:1 },	
+                {	name:'iron-plate',	reqs:{ 'mission-furnace':1 },	machine:'furnace',	time:3.2,	output:1,	inputs:{ 'iron':1 }	},
 
                 // Mission #3
                 //---
                 {	name:'mission-lab',	reqs:{ 'mission-assembler':1 },	machine:'manual',	time:2,	output:1,	inputs:{ 'circuit':10, 'gear':10, 'belt':4 }	},
                 //---
                 {	name:'assembler',	reqs:{ 'mission-assembler':1 },	machine:'manual',	time:7,	output:1,	inputs:{ 'iron-plate':22, 'copper-plate':5 }	},
-                {	name:'miner',	reqs:{ 'mission-assembler':1 },	machine:'manual',	time:5,	output:1,	inputs:{ 'iron-plate':6, 'gear':6, 'stone':10 }	},
                 //---
                 {	name:'belt',	machine:'assembler',	time:0.5,	output:2,	inputs:{ 'iron-plate':1, 'gear':1 }	},
                 {	name:'cable',	machine:'assembler',	time:0.5,	output:2,	inputs:{ 'copper-plate':1 }	},
@@ -152,49 +152,57 @@ var DATA = {
                 {	name:'robotics',	reqs:{ 'mission-defense':1 },	machine:'lab',	time:30*75,	output:1,	inputs:{ 'red-pack':75, 'green-pack':75, 'blue-pack':75 }	},
                 {	name:'yellow-tech',	reqs:{ 'mission-defense':1 },	machine:'lab',	time:30*100,	output:1,	inputs:{ 'red-pack':100, 'green-pack':100, 'blue-pack':100 }	},
 
-                /*
-                {	name:'mission-spidertron',	reqs:{ 'mission-equipment':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'exoskeleton':4, 'fusion-reactor':2, 'rocket-launcher':4, 'rocket-control-unit':16, 'low-density-structure':150, 'radar':2 }	},
-                {	name:'mission-rocket',	reqs:{ 'mission-spidertron':1 },	machine:'rocket-silo',	time:3,	output:1,	inputs:{ 'rocket-fuel':10, 'rocket-control-unit':10, 'low-density-structure':10 }	},
-                {	name:'mission-satellite',	reqs:{ 'mission-rocket':1 },	machine:'assembler-3',	time:5,	output:1,	inputs:{ 'accumulator':100, 'low-density-structure':100, 'circuit-3':100, 'radar':5, 'rocket-fuel':50, 'solar-panel':100 }	},
+                // Mission #8
                 //---
-                {	name:'portable-fusion-reactor',	reqs:{ 'portable-fusion-reactor-tech':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'circuit-3':200, 'low-density-structure':50 }	},
-                {	name:'accumulator',	reqs:{ 'accumulator-tech':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'iron-plate':2, 'battery':5 }	},
-                {	name:'concrete',	reqs:{ 'concrete-tech':1 },	machine:'assembler-2',	time:10,	output:10,	inputs:{ 'water':100, 'iron':1, 'brick':5 }	},
+                {	name:'mission-spidertron',	reqs:{ 'mission-equipment':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'exoskeleton':4, 'portable-fusion-reactor':2, 'rocket-launcher':4, 'rocket-control-unit':16, 'low-density-structure':150, 'radar':2 }	},
+                //---
                 {	name:'exoskeleton',	reqs:{ 'exoskeleton-tech':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'circuit-3':10, 'engine-2':30, 'steel':20 }	},
-                {	name:'furnace-3',	reqs:{ 'material-2':1 },	machine:'assembler',	time:5,	output:1,	inputs:{ 'circuit-2':5, 'steel':10, 'brick':10 }	},
-                {	name:'light-oil',	reqs:{ 'oil-tech':1 },	machine:'chemical-plant',	time:1,	output:15,	inputs:{ 'water':15, 'heavy-oil':20 }	},
-                {	name:'productivity-module',	reqs:{ 'productivity':1 },	machine:'assembler',	time:15,	output:1,	inputs:{ 'circuit':5, 'circuit-2':5 }	},
-                {	name:'purple-pack',	reqs:{ 'purple-tech':1 },	machine:'assembler',	time:21,	output:3,	inputs:{ 'furnace-3':1, 'productivity-module':1, 'rail':30	}	},
-                {	name:'radar',	machine:'assembler',	time:0.5,	output:1,	inputs:{ 'iron-plate':10, 'gear':5, 'circuit':5 }	},
+                {	name:'portable-fusion-reactor',	reqs:{ 'portable-fusion-reactor-tech':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'circuit-3':200, 'low-density-structure':50 }	},
+                {	name:'radar',	reqs:{ 'mission-equipment':1 },	machine:'assembler',	time:0.5,	output:1,	inputs:{ 'iron-plate':10, 'gear':5, 'circuit':5 }	},
                 {	name:'rocket-control-unit',	reqs:{ 'rocket-control-unit-tech':1 },	machine:'assembler',	time:30,	output:1,	inputs:{ 'speed-module':1, 'circuit-3':1 }	},
-                {	name:'rocket-fuel',	reqs:{ 'rocket-fuel-tech':1 },	machine:'assembler-2',	time:30,	output:1,	inputs:{ 'solid-fuel':10, 'light-oil':10 }	},
                 {	name:'rocket-launcher',	reqs:{ 'rocketry':1 },	machine:'assembler',	time:10,	inputs:{ 'iron-plate':5, 'gear':5, 'circuit':5 }	},
-                {	name:'solar-panel',	reqs:{ 'solar-energy':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'copper-plate':5, 'steel':5, 'circuit':15 }	},
-                {	name:'solid-fuel',	reqs:{ 'oil-tech':1, 'oil-tech-2':1 },	machine:'chemical-plant',	time:2,	output:1,	inputs:{ 'light-oil':10 }	},
                 {	name:'speed-module',	reqs:{ 'speed':1 },	machine:'assembler',	time:15,	output:1,	inputs:{ 'circuit':5, 'circuit-2':5 }	},
                 //---
-                {	name:'assembler-3',	reqs:{ 'automation-3':1 },	machine:'manual',	time:12,	output:1,	inputs:{ 'speed-module':4, 'gear':10, 'steel':4, 'circuit':6, 'iron-plate':44, 'copper-plate':10 }	},
+                {	name:'exoskeleton-tech',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50, 'blue-pack':50 }	},
+                {	name:'portable-fusion-reactor-tech',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:30*200,	output:1,	inputs:{ 'red-pack':200, 'green-pack':200, 'grey-pack':200, 'blue-pack':200, 'yellow-pack':200 }	},
+                {	name:'rocket-control-unit-tech',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:45*300,	output:1,	inputs:{ 'red-pack':300, 'green-pack':300, 'blue-pack':300, 'yellow-pack':300 }	},
+                {	name:'rocketry',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:15*120,	output:1,	inputs:{ 'red-pack':120, 'green-pack':120, 'grey-pack':120 }	},
+                {	name:'speed',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50 }	},
+
+                // Mission #9
+                //---
+                {	name:'mission-rocket',	reqs:{ 'mission-spidertron':1 },	machine:'rocket-silo',	time:3,	output:1,	inputs:{ 'rocket-fuel':10, 'rocket-control-unit':10, 'low-density-structure':10 }	},
+                //---
                 {	name:'rocket-silo',	reqs:{ 'rocket-tech':1 },	machine:'manual',	time:30,	output:1,	inputs:{ 'pipe':100, 'steel':1000, 'concrete':1000, 'circuit-3':200, 'engine-2':200 }	},
                 //---
-                {	name:'portable-fusion-reactor-tech',	reqs:{ 'mission-defense':1 },	machine:'lab',	time:30*200,	output:1,	inputs:{ 'red-pack':200, 'green-pack':200, 'grey-pack':200, 'blue-pack':200, 'yellow-pack':200 }	},
+                {	name:'concrete',	reqs:{ 'concrete-tech':1 },	machine:'assembler-2',	time:10,	output:10,	inputs:{ 'water':100, 'iron':1, 'brick':5 }	},
+                {	name:'furnace-3',	reqs:{ 'material-2':1 },	machine:'assembler',	time:5,	output:1,	inputs:{ 'circuit-2':5, 'steel':10, 'brick':10 }	},
+                {	name:'light-oil',	reqs:{ 'mission-spidertron':1 },	machine:'chemical-plant',	time:1,	output:15,	inputs:{ 'water':15, 'heavy-oil':20 }	},
+                {	name:'purple-pack',	reqs:{ 'purple-tech':1 },	machine:'assembler',	time:21,	output:3,	inputs:{ 'furnace-3':1, 'productivity-module':1, 'rail':30	}	},
+                {	name:'productivity-module',	reqs:{ 'productivity':1 },	machine:'assembler',	time:15,	output:1,	inputs:{ 'circuit':5, 'circuit-2':5 }	},
+                {	name:'rocket-fuel',	reqs:{ 'rocket-fuel-tech':1 },	machine:'assembler-2',	time:30,	output:1,	inputs:{ 'solid-fuel':10, 'light-oil':10 }	},
+                {	name:'solid-fuel',	reqs:{ 'oil-tech-2':1 },	machine:'chemical-plant',	time:2,	output:1,	inputs:{ 'light-oil':10 }	},
+                //---
+                {	name:'concrete-tech',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:30*250,	output:1,	inputs:{ 'red-pack':250, 'green-pack':250 }	},
+                {	name:'material-2',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:30*250,	output:1,	inputs:{ 'red-pack':250, 'green-pack':250, 'blue-pack':250 }	},
+                {	name:'oil-tech-2',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:30*75,	output:1,	inputs:{ 'red-pack':75, 'green-pack':75, 'blue-pack':75 }	},
+                {	name:'productivity',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50 }	},
+                {	name:'purple-tech',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:30*100,	output:1,	inputs:{ 'red-pack':100, 'green-pack':100, 'blue-pack':100 }	},
+                {	name:'rocket-fuel-tech',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:45*300,	output:1,	inputs:{ 'red-pack':300, 'green-pack':300, 'blue-pack':300 }	},
+                {	name:'rocket-tech',	reqs:{ 'mission-spidertron':1 },	machine:'lab',	time:60*1000,	output:1,	inputs:{ 'red-pack':1000, 'green-pack':1000, 'blue-pack':1000, 'purple-pack':1000, 'yellow-pack':1000 }	},
+
+                // Mission #10
+                //---
+                {	name:'mission-satellite',	reqs:{ 'mission-rocket':1 },	machine:'assembler-3',	time:5,	output:1,	inputs:{ 'accumulator':100, 'low-density-structure':100, 'circuit-3':100, 'radar':5, 'rocket-fuel':50, 'solar-panel':100 }	},
+                //---
+                {	name:'assembler-3',	reqs:{ 'automation-3':1 },	machine:'manual',	time:12,	output:1,	inputs:{ 'speed-module':4, 'gear':10, 'steel':4, 'circuit':6, 'iron-plate':44, 'copper-plate':10 }	},
+                //---
+                {	name:'accumulator',	reqs:{ 'accumulator-tech':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'iron-plate':2, 'battery':5 }	},
+                {	name:'solar-panel',	reqs:{ 'solar-energy':1 },	machine:'assembler',	time:10,	output:1,	inputs:{ 'copper-plate':5, 'steel':5, 'circuit':15 }	},
+                //---
                 {	name:'accumulator-tech',	reqs:{ 'mission-rocket':1 },	machine:'lab',	time:30*150,	output:1,	inputs:{ 'red-pack':150, 'green-pack':150 }	},
-                {	name:'automation-3',	reqs:{ 'purple-tech':1, 'speed':1 },	machine:'lab',	time:60*150,	output:1,	inputs:{ 'red-pack':150, 'green-pack':150, 'blue-pack':150, 'purple-pack':150 }	},
-                {	name:'concrete-tech',	reqs:{ 'automation-2':1 },	machine:'lab',	time:30*250,	output:1,	inputs:{ 'red-pack':250, 'green-pack':250 }	},
-                {	name:'exoskeleton-tech',	reqs:{ 'electronics-3':1, 'engine-tech-2':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50, 'blue-pack':50 }	},
-                {	name:'flammables',	reqs:{ 'oil-tech':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50 }	},
-                {	name:'material-2',	reqs:{ 'mission-rocket':1 },	machine:'lab',	time:30*250,	output:1,	inputs:{ 'red-pack':250, 'green-pack':250, 'blue-pack':250 }	},
-                {	name:'military-3',	reqs:{ 'grey-tech':1 },	machine:'lab',	time:30*100,	output:1,	inputs:{ 'red-pack':100, 'green-pack':100, 'grey-pack':100, 'blue-pack':100 }	},
-                {	name:'military-4',	reqs:{ 'yellow-tech':1 },	machine:'lab',	time:45*150,	output:1,	inputs:{ 'red-pack':150, 'green-pack':150, 'grey-pack':150, 'blue-pack':150, 'yellow-pack':150 }	},
-                {	name:'oil-tech-2',	reqs:{ 'mission-equipment':1 },	machine:'lab',	time:30*75,	output:1,	inputs:{ 'red-pack':75, 'green-pack':75, 'blue-pack':75 }	},
-                {	name:'productivity',	reqs:{ 'electronics-2':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50 }	},
-                {	name:'purple-tech',	reqs:{ 'material-2':1, 'productivity':1, 'railway':1 },	machine:'lab',	time:30*100,	output:1,	inputs:{ 'red-pack':100, 'green-pack':100, 'blue-pack':100 }	},
-                {	name:'rocket-control-unit-tech',	reqs:{ 'speed':1, 'yellow-tech':1 },	machine:'lab',	time:45*300,	output:1,	inputs:{ 'red-pack':300, 'green-pack':300, 'blue-pack':300, 'yellow-pack':300 }	},
-                {	name:'rocket-tech',	reqs:{ 'concrete-tech':1, 'rocket-control-unit-tech':1, 'rocket-fuel-tech':1 },	machine:'lab',	time:60*1000,	output:1,	inputs:{ 'red-pack':1000, 'green-pack':1000, 'blue-pack':1000, 'purple-pack':1000, 'yellow-pack':1000 }	},
-                {	name:'rocket-fuel-tech',	reqs:{ 'flammables':1, 'oil-tech-2':1 },	machine:'lab',	time:45*300,	output:1,	inputs:{ 'red-pack':300, 'green-pack':300, 'blue-pack':300 }	},
-                {	name:'rocketry',	reqs:{ 'flammables':1, 'explosives-tech':1, 'green-tech':1 },	machine:'lab',	time:15*120,	output:1,	inputs:{ 'red-pack':120, 'green-pack':120, 'grey-pack':120 }	},
+                {	name:'automation-3',	reqs:{ 'mission-rocket':1 },	machine:'lab',	time:60*150,	output:1,	inputs:{ 'red-pack':150, 'green-pack':150, 'blue-pack':150, 'purple-pack':150 }	},
                 {	name:'solar-energy',	reqs:{ 'mission-rocket':1 },	machine:'lab',	time:30*250,	output:1,	inputs:{ 'red-pack':250, 'green-pack':250 }	},
-                {	name:'speed',	reqs:{ 'electronics-2':1 },	machine:'lab',	time:30*50,	output:1,	inputs:{ 'red-pack':50, 'green-pack':50 }	},
-                */
             ],
             //---
             items:[
@@ -208,9 +216,9 @@ var DATA = {
                 {	id:'mission-train',	cat:'objective',	recipeName:'mission-train',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
                 {	id:'mission-defense',	cat:'objective',	recipeName:'mission-defense',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
                 {	id:'mission-equipment',	cat:'objective',	recipeName:'mission-equipment',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
-                //{	id:'mission-spidertron',	cat:'objective',	recipeName:'mission-spidertron',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
-                //{	id:'mission-rocket',	cat:'objective',	recipeName:'mission-rocket',	stack:100,	toComplete:true,	hasUnlocks:true,	desc:true	},
-                //{	id:'mission-satellite',	cat:'objective',	recipeName:'mission-satellite',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
+                {	id:'mission-spidertron',	cat:'objective',	recipeName:'mission-spidertron',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
+                {	id:'mission-rocket',	cat:'objective',	recipeName:'mission-rocket',	stack:100,	toComplete:true,	hasUnlocks:true,	desc:true	},
+                {	id:'mission-satellite',	cat:'objective',	recipeName:'mission-satellite',	stack:1,	toComplete:true,	hasUnlocks:true,	desc:true	},
                 
                 // Machines
                 //---
@@ -224,8 +232,8 @@ var DATA = {
                 {	id:'refinery',	cat:'machine',	recipeName:'refinery'	},
                 {	id:'chemical-plant',	cat:'machine',	recipeName:'chemical-plant'	},
                 {	id:'assembler-2',	cat:'machine',	recipeName:'assembler-2'	},
-                //{	id:'assembler-3',	cat:'machine',	recipeName:'assembler-3'	},
-                //{	id:'rocket-silo',	cat:'machine',	recipeName:'rocket-silo'	},
+                {	id:'rocket-silo',	cat:'machine',	recipeName:'rocket-silo'	},
+                {	id:'assembler-3',	cat:'machine',	recipeName:'assembler-3'	},
 
                 // Techs
                 //---
@@ -265,27 +273,24 @@ var DATA = {
                 {	id:'nightvision-tech',	cat:'tech',	recipeName:'nightvision-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
                 {	id:'robotics',	cat:'tech',	recipeName:'robotics',	stack:1,	hasUnlocks:true,	toComplete:true	},
                 {	id:'yellow-tech',	cat:'tech',	recipeName:'yellow-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-
-                /*
-                {	id:'portable-fusion-reactor-tech',	cat:'tech',	recipeName:'portable-fusion-reactor-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'flammables',	cat:'tech',	recipeName:'flammables',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'military-3',	cat:'tech',	recipeName:'military-3',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'oil-tech-2',	cat:'tech',	recipeName:'oil-tech-2',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'military-4',	cat:'tech',	recipeName:'military-4',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                //---
                 {	id:'exoskeleton-tech',	cat:'tech',	recipeName:'exoskeleton-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'rocketry',	cat:'tech',	recipeName:'rocketry',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'rocket-control-unit-tech',	cat:'tech',	recipeName:'rocket-control-unit-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'speed',	cat:'tech',	recipeName:'speed',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'rocket-fuel-tech',	cat:'tech',	recipeName:'rocket-fuel-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'concrete-tech',	cat:'tech',	recipeName:'concrete-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'rocket-tech',	cat:'tech',	recipeName:'rocket-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'accumulator-tech',	cat:'tech',	recipeName:'accumulator-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
-                {	id:'solar-energy',	cat:'tech',	recipeName:'solar-energy',	stack:1,	hasUnlocks:true,	toComplete:true	},                
-                {	id:'automation-3',	cat:'tech',	recipeName:'automation-3',	stack:1,	hasUnlocks:true,	toComplete:true	},                
+                {	id:'portable-fusion-reactor-tech',	cat:'tech',	recipeName:'portable-fusion-reactor-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
                 {	id:'productivity',	cat:'tech',	recipeName:'productivity',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'rocket-control-unit-tech',	cat:'tech',	recipeName:'rocket-control-unit-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'rocketry',	cat:'tech',	recipeName:'rocketry',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'speed',	cat:'tech',	recipeName:'speed',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                //---
+                {	id:'concrete-tech',	cat:'tech',	recipeName:'concrete-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
                 {	id:'material-2',	cat:'tech',	recipeName:'material-2',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'oil-tech-2',	cat:'tech',	recipeName:'oil-tech-2',	stack:1,	hasUnlocks:true,	toComplete:true	},
                 {	id:'purple-tech',	cat:'tech',	recipeName:'purple-tech',	stack:1,	hasUnlocks:true,	toComplete:true	}, 
-                */                
+                {	id:'rocket-fuel-tech',	cat:'tech',	recipeName:'rocket-fuel-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'rocket-tech',	cat:'tech',	recipeName:'rocket-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                //---
+                {	id:'accumulator-tech',	cat:'tech',	recipeName:'accumulator-tech',	stack:1,	hasUnlocks:true,	toComplete:true	},
+                {	id:'automation-3',	cat:'tech',	recipeName:'automation-3',	stack:1,	hasUnlocks:true,	toComplete:true	},                
+                {	id:'solar-energy',	cat:'tech',	recipeName:'solar-energy',	stack:1,	hasUnlocks:true,	toComplete:true	},                
             ],
         }
     ]

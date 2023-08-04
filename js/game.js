@@ -45,7 +45,6 @@ class GameItem {
     reset(game) {
         //---
         this.recipe = game.currentScenario.recipes.find(recipe => recipe.name == this.recipeName)
-        console.log(this.recipeName)
         //---
         this.stack = this.initData.stack ? Math.ceil(this.initData.stack) : Infinity
         if (this.stack != Infinity && this.recipe.output != 1) {
@@ -254,7 +253,6 @@ class Game {
         //---
         for (let id in reqs) {
             //---
-            console.log(id)
             let item = this.getItem(id)
             if (item.count < reqs[id]) check = false
         }
@@ -388,7 +386,7 @@ class Game {
                     }
                     //---
                     item.count += (estimatedCycleCount + 1) * item.output
-                    if (item.stack != Infinity && item.count >= item.stack) item.count = item.stack
+                    if (item.stack != Infinity && item.count >= item.stack) item.count = item.stack                    
                     //---
                     item.totalCount += (estimatedCycleCount + 1) * item.output
                     if (item.toComplete && item.stack != Infinity && item.totalCount >= item.stack) {
